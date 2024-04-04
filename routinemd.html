@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Schedules</title>
+    <style>
+        /* CSS styles for layout */
+        body {
+            font-family: Arial, sans-serif;
+            position: relative; /* Add relative positioning to the body */
+        }
+
+        .schedule-container {
+            display:flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .schedule-column {
+            flex: 1;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+            margin-right: 20px;
+        }
+
+        .schedule-column:last-child {
+            margin-right: 0;
+        }
+
+        .box {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .box:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .current-week {
+            font-weight: bold;
+        }
+
+        .live-item {
+            font-weight: 700;
+            color: #121111;
+            animation: blink 0.5s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* CSS styles for close button */
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            
+            cursor: pointer;
+            z-index: 9999; /* Ensure the button stays on top */
+        }
+        .close-button:hover
+        {
+            background: #000;
+            color: #fff; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Close button with icon -->
+    <div class="close-button" onclick="toggleNavbar()">
+        <img src="close.png" alt="Close" height="40">
+    </div>
+
+    <!-- Navigation bar (hidden by default) -->
+    <nav id="navbar" style="display: none;">
+        <ul>
+            <li><a href="home page.html">Home</a></li>
+            <li><a href="card.html">About</a></li>
+            <li><a href="notice.html">Notice</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Batch schedules container -->
+    <div class="schedule-container" id="schedule-container"></div>
+
+    <script>
+        // Function to toggle navigation bar visibility
+        function toggleNavbar() {
+            const navbar = document.getElementById('navbar');
+            navbar.style.display = (navbar.style.display === 'none') ? 'block' : 'none';
+        }
+
+        // Function to fetch starting date from the API
+        async function fetchStartingDate() {
+            try {
+                const response = await fetch('/api/batch');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch starting date');
+                }
+                const data = await response.json();
+                return data.startingDate;
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        // Function to calculate the current week based on starting date
+        function calculateCurrentWeek(startingDate) {
+            const startDate = new Date(startingDate);
+            const today = new Date();
+            const differenceTime = today - startDate;
+            const differenceWeeks = Math.floor(differenceTime / (1000 * 3600 * 24 * 7));
+            return differenceWeeks + 1; // Adding 1 to make it 1-indexed
+        }
+
+
+
+        
+
+        // Function to render schedules with starting date from API and calculated current week
+        async function renderSchedules() {
+            const scheduleContainer = document.getElementById('schedule-container');
+            const startingDate = await fetchStartingDate();
+
+            // Dummy data for batch schedules
+            const dummyData = {
+                'Batch 18': 'ETE 201',
+                'Batch 19': 'BREAK',
+                'Batch 20': 'ETE 309',
+                'Batch 21': 'ETE 201',
+                'Batch 22': 'BREAK'
+            };
+
+            for (const batch in dummyData) {
+                if (dummyData.hasOwnProperty(batch)) {
+                    const liveItem = dummyData[batch];
+                    const currentWeek = calculateCurrentWeek(startingDate);
+
+                    const column = document.createElement('div');
+                    column.classList.add('schedule-column');
+                    column.innerHTML = `
+                        <h2>${batch}</h2>
+                        <div class="box">
+                            <h3>Starting Date</h3>
+                            <p>${startingDate}</p>
+                        </div>
+                        <div class="box">
+                            <h3>Current Week</h3>
+                            <p class="current-week">${currentWeek}</p>
+                        </div>
+                        <div class="box" style="background-color: #fdecea;">
+                            <h3>Live Item</h3>
+                            <p class="live-item">${liveItem}</p>
+                        </div>
+                    `;
+                    scheduleContainer.appendChild(column);
+                }
+            }
+        }
+
+        // Call the renderSchedules function to render schedules with data from API and calculated current week on page load
+        window.onload = renderSchedules();
+    </script>
+</body>
+</html>

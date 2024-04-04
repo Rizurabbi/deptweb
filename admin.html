@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+
+
+
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            font-size: 15px; /* Adjusted font size */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fffdfd; /* Adjusted box color */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 17px; /* Adjusted font size */
+        }
+
+        h1 {
+            text-align: center;
+            color: #111010; /* Adjusted text color */
+            font-size: 25px; /* Adjusted font size */
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 19px; /* Adjusted font size */
+            color: #171717; /* Adjusted text color */
+        }
+
+        select, input[type="date"], input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 16px; /* Adjusted font size */
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        button {
+            display: inline-block;
+            width: auto; /* Adjusted width */
+            padding: 15px 30px; /* Adjusted padding */
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px; /* Adjusted font size */
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<!------
+<body>
+    <div class="container">
+        <h1>Admin Panel</h1>
+        <form>
+            <div class="form-group">
+                <label for="batch">Select Batch:</label>
+                <select id="batch">
+                    <option value="batch18">Batch 18</option>
+                    <option value="batch19">Batch 19</option>
+                    <option value="batch20">Batch 20</option>
+                    <option value="batch21">Batch 21</option>
+                    <option value="batch22">Batch 22</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="starting-date">Class Starting Date:</label>
+                <input type="date" id="starting-date">
+            </div>
+            <div class="form-group">
+                <label for="routine-file">Upload Routine:</label>
+                <input type="file" id="routine-file">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="button-container">
+            <button onclick="goBack()">Back</button>
+            <button>Home</button>
+            <button>Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
+<!-->
+
+
+
+    <body>
+        <div class="container">
+            <h1>Admin Panel</h1>
+            <form id="admin-form">
+                <div class="form-group">
+                    <label for="batch">Select Batch:</label>
+                    <select id="batch">
+                        <option value="batch18">Batch 18</option>
+                        <option value="batch19">Batch 19</option>
+                        <option value="batch20">Batch 20</option>
+                        <option value="batch21">Batch 21</option>
+                        <option value="batch22">Batch 22</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="starting-date">Class Starting Date:</label>
+                    <input type="date" id="starting-date">
+                </div>
+                <!--- <div class="form-group">
+                    <label for="routine-file">Upload Routine:</label>
+                    <input type="file" id="routine-file">
+                </div>
+                <---->
+                <button type="submit">Submit</button>
+            </form>
+            <div class="button-container">
+                <button onclick="goBack()">Back</button>
+                <button>Home</button>
+                <button>Dashboard</button>
+            </div>
+        </div>
+    
+
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-message"></p>
+                <button id="okButton">OK</button>
+            </div>
+        </div>
+
+
+
+
+        <script>
+
+function showModal(message) {
+            var modal = document.getElementById("myModal");
+            document.getElementById("modal-message").textContent = message;
+            modal.style.display = "block";
+        }
+
+        // Function to hide modal
+        function hideModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        // Function to clear form inputs
+        function clearFormInputs() {
+            document.getElementById("admin-form").reset();
+        }
+
+        // Function to validate form inputs
+        function validateFormInputs() {
+            var batch = document.getElementById('batch').value;
+            var startingDate = document.getElementById('starting-date').value;
+            //var routineFile = document.getElementById('routine-file').value;
+
+            if (!batch || !startingDate ) {
+                showModal("Please input all fields");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Event listener for form submission
+        document.getElementById('admin-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Validate form inputs
+            if (!validateFormInputs()) {
+                return;
+            }
+
+            // Your form submission logic here
+            
+            // Display modal
+            showModal("Form submitted successfully!");
+
+            // Clear form inputs
+            clearFormInputs();
+        });
+
+        // Event listener for OK button in modal
+        document.getElementById('okButton').addEventListener('click', function() {
+            // Hide modal
+            hideModal();
+        });
+
+        // Function to go back
+        function goBack() {
+            window.history.back();
+        }
+
+
+        document.getElementById('admin-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            const batch = document.getElementById('batch').value;
+            const startingDate = document.getElementById('starting-date').value;
+
+            // Create an object with the form data
+            const formData = {
+                batch: batch,
+                startingDate: startingDate
+            };
+
+            // Send a POST request to the /api/batch endpoint
+            fetch('/api/batch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update batch data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Handle successful response
+                console.log('Batch data updated successfully:', data);
+                // Optionally, show success message or redirect
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Error updating batch data:', error.message);
+                // Optionally, show error message
+            });
+        });
+
+
+
+  
+        </script>
+    </body>
+    </html>
